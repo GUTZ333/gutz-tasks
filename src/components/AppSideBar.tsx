@@ -1,4 +1,4 @@
-"use client";
+import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,55 +10,54 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useContext } from "react";
-import { TaskContext } from "@/context/TaskContext";
-import { CheckSquare, Clipboard } from "lucide-react";
 
-export default function AppSidebar() {
-  const { taskState } = useContext(TaskContext)!;
+// Menu items.
+const items = [
+  {
+    title: "Home",
+    url: "#",
+    icon: Home,
+  },
+  {
+    title: "Inbox",
+    url: "#",
+    icon: Inbox,
+  },
+  {
+    title: "Calendar",
+    url: "#",
+    icon: Calendar,
+  },
+  {
+    title: "Search",
+    url: "#",
+    icon: Search,
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: Settings,
+  },
+];
 
+export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="none">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center gap-2">
-            Tarrefas Concluídas {""}
-            <CheckSquare size={15} />
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {taskState
-                .filter((task) => task.status === "done")
-                .map((task) => (
-                  <SidebarMenuItem key={task.id}>
-                    <SidebarMenuButton className="cursor-pointer" asChild>
-                      <div className="flex items-center space-x-2">
-                        <Clipboard size={20} />
-                        {task.name}
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-          <SidebarGroupLabel className="flex items-center gap-2">
-            Tarrefas Não Concluídas {""}
-            <CheckSquare size={15} />
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {taskState
-                .filter((task) => task.status === "pending")
-                .map((task) => (
-                  <SidebarMenuItem key={task.id}>
-                    <SidebarMenuButton className="cursor-pointer" asChild>
-                      <div className="flex items-center space-x-2">
-                        <Clipboard size={20} />
-                        {task.name}
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

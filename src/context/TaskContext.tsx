@@ -15,6 +15,9 @@ export const TaskContext = createContext<ITaskContext | undefined>(undefined);
 
 const taskReducer = (state: ITasks[], action: Actions): ITasks[] => {
   switch (action.type) {
+    case "INIT": {
+      return action.payload.tasks;
+    }
     case "ADD": {
       const newTask: ITasks = {
         id: state.length + 1,
@@ -46,40 +49,27 @@ export default function TaskContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [taskStorage, setTaskStorage] = useState<ITasks[] | null>(null);
-  const [hydrated, setHydrated] = useState(false); // para evitar erro de hydration
+  const initialState: ITasks[] = [];
+  const [taskState, dispatch] = useReducer(taskReducer, initialState);
+  const [isNewUser, setIsNewUser] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storage = localStorage.getItem("tasks");
-      if (storage !== null) {
-        setTaskStorage(JSON.parse(storage));
-      } else {
-        setTaskStorage(null);
-      }
-      setHydrated(true);
+    const taskStorage = localStorage.getItem("tasks");
+    if (taskStorage !== null) {
+      const parsedTasks = JSON.parse(taskStorage);
+      dispatch({ type: "INIT", payload: { tasks: parsedTasks as ITasks[] } });
+      setIsNewUser(false);
     }
+    setIsLoading(false);
   }, []);
-
-  const initialTaskState: ITasks[] = taskStorage !== null ? taskStorage : [];
-  const [taskState, dispatch] = useReducer(taskReducer, initialTaskState);
-
-  // Só salva no localStorage se houver tarefas
-  useEffect(() => {
-    setTaskStorage(taskState);
-  }, [taskState]);
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(taskState));
-  }, [taskStorage]);
-
-  // ⚠️ Removido o removeItem automático que quebrava tudo
-  useEffect(() => localStorage.removeItem("tasks"), []);
-
-  if (!hydrated) return null; // espera até carregar localStorage
+  }, [taskState]);
 
   return (
-    <TaskContext.Provider value={{ taskState, dispatch, taskStorage }}>
+    <TaskContext.Provider value={{ taskState, dispatch, isNewUser, isLoading }}>
       {children}
     </TaskContext.Provider>
   );

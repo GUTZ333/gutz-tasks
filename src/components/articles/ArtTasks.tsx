@@ -144,14 +144,13 @@ export default function ArtTasks({ className }: HTMLAttributes<HTMLElement>) {
       },
     },
   ];
-
   return (
     <article className={className}>
       <DataTable
         columns={columns}
         data={taskState}
         pageSize={3}
-        searchPlaceholder="filter tasks..."
+        searchPlaceholder="Buscar tarefas..."
       />
     </article>
   );

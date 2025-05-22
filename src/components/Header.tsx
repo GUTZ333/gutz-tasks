@@ -32,6 +32,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { Wrench } from "lucide-react";
+import Link from "next/link";
 
 export default function Header({ className }: HTMLAttributes<HTMLElement>) {
   const { taskState, dispatch } = useContext(TaskContext)!;
@@ -59,7 +60,9 @@ export default function Header({ className }: HTMLAttributes<HTMLElement>) {
 
   return (
     <header className={className}>
-      <Image src={GutzTasksIcon} alt="Gutz Tasks" width={50} />
+      <Link className="mr-auto ml-2" href="/">
+        <Image src={GutzTasksIcon} alt="Gutz Tasks" width={50} />
+      </Link>
       <div className="flex gap-2">
         <Menubar>
           <MenubarMenu>

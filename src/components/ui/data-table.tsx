@@ -27,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./input";
 
@@ -83,7 +83,7 @@ export default function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Customizar Colunas
+              <Settings2 />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

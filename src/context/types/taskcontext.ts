@@ -5,5 +5,6 @@ import { Dispatch } from "react";
 export default interface ITaskContext {
   taskState: ITasks[];
   dispatch: Dispatch<Actions>;
-  taskStorage: ITasks[] | null;
+  isNewUser: boolean;
+  isLoading: boolean;
 }
