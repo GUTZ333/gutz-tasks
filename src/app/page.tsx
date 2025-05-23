@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <>
-      {isNewUser === true ? (
+      {isNewUser ? (
         <ArtWelcome className="w-full h-screen p-2 flex items-center justify-center" />
       ) : (
         <main
