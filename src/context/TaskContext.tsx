@@ -56,7 +56,7 @@ export default function TaskContextProvider({
 
   useEffect(() => {
     const taskStorage = localStorage.getItem("tasks");
-    if (taskStorage !== null) {
+    if (taskStorage) {
       const parsedTasks = JSON.parse(taskStorage);
       dispatch({ type: "INIT", payload: { tasks: parsedTasks as ITasks[] } });
       setIsNewUser(false);
@@ -66,6 +66,7 @@ export default function TaskContextProvider({
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(taskState));
+    setIsNewUser(false);
   }, [taskState]);
 
   return (
