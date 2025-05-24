@@ -5,7 +5,8 @@ import {
   ReactNode,
   useEffect,
   useReducer,
-  useState,
+  useRef,
+  useState, // Mantenha useState para o isDataLoaded
 } from "react";
 import ITasks from "@/types/tasks";
 import { Actions } from "@/types/actions";
@@ -49,36 +50,31 @@ export default function TaskContextProvider({
 }: {
   children: ReactNode;
 }) {
-  // Estado inicial do reducer: lê do localStorage na primeira renderização
-  const [taskState, dispatch] = useReducer(taskReducer, [], (initialArg) => {
+  const [taskState, dispatch] = useReducer(taskReducer, []);
+  const isMounted = useRef(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isNewUser, setIsNewUser] = useState<boolean>(true);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const taskStorage = localStorage.getItem("tasks");
       if (taskStorage) {
-        return JSON.parse(taskStorage) as ITasks[];
+        setIsNewUser(false);
+        dispatch({ type: "INIT", payload: { tasks: JSON.parse(taskStorage) } });
       }
     }
-    return initialArg; // Retorna o estado inicial vazio se não houver a chave "tasks"
-  });
-
-  // Determina se é um novo usuário com base na existência da chave "tasks" no localStorage
-  const [isNewUser, setIsNewUser] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("tasks") === null;
-    }
-    return true; // Assume que é um novo usuário no lado do servidor (SSR)
-  });
-
-  // Sincroniza o taskState com o localStorage
+    setIsDataLoaded(true);
+  }, []);
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(taskState));
-
-    // Se a chave "tasks" existe no localStorage, não é um novo usuário.
-    // Isso é importante caso o usuário tenha sido marcado como "novo" (ex: SSR)
-    // e depois o localStorage foi lido e a chave existe.
-    if (localStorage.getItem("tasks") !== null && isNewUser) {
+    if (isMounted.current) {
+      localStorage.setItem("tasks", JSON.stringify(taskState));
       setIsNewUser(false);
+    } else {
+      isMounted.current = true;
     }
-  }, [taskState, isNewUser]);
+  }, [taskState]);
+
+  if (!isDataLoaded) return null;
 
   return (
     <TaskContext.Provider value={{ taskState, dispatch, isNewUser }}>
