@@ -91,7 +91,7 @@ export default function Header({ className }: HTMLAttributes<HTMLElement>) {
             <DialogTitle>Crie uma nova tarefa</DialogTitle>
             <DialogDescription>
               Preencha os campos abaixo para criar uma tarefa aqui na Gutz
-              Manager.
+              Tasks.
             </DialogDescription>
           </DialogHeader>
           <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
