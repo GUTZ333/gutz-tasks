@@ -49,10 +49,12 @@ export default function TaskContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const initialState: ITasks[] = [];
-  const [isInitialized, setIsInitialized] = useState<boolean>(true);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const [isNewUser, setIsNewUser] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const initialState: ITasks[] = [];
+  const [taskState, dispatch] = useReducer(taskReducer, initialState);
 
   useEffect(() => {
     const taskStorage = localStorage.getItem("tasks");
@@ -61,10 +63,9 @@ export default function TaskContextProvider({
       dispatch({ type: "INIT", payload: { tasks: parsedTasks as ITasks[] } });
       setIsNewUser(false);
     }
-    setIsInitialized(false);
+    setIsInitialized(true);
     setIsLoading(false);
   }, []);
-  const [taskState, dispatch] = useReducer(taskReducer, initialState);
 
   useEffect(() => {
     if (!isInitialized) return;
