@@ -28,74 +28,6 @@ export default function ArtTasks({ className }: HTMLAttributes<HTMLElement>) {
 
   const columns: ColumnDef<ITasks>[] = [
     {
-      accessorKey: "id",
-      header: "ID",
-      cell: ({ row }) => {
-        return <div>{row.getValue("id")}</div>;
-      },
-    },
-    {
-      accessorKey: "name",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            className="cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Nome <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return <div>{row.getValue("name")}</div>;
-      },
-    },
-    {
-      accessorKey: "desc",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            className="cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Descrição <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return <div className="max-w-sm truncate">{row.getValue("desc")}</div>;
-      },
-    },
-    {
-      accessorKey: "status",
-      header: ({ column }) => {
-        return (
-          <Button
-            className="cursor-pointer"
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            status <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const status = row.getValue("status") as ReactNode;
-        return (
-          <div className="flex items-center gap-1 ">
-            {status === "pending" ? (
-              <Hourglass size={11.5} />
-            ) : (
-              <Check size={11.5} />
-            )}
-            {status}
-          </div>
-        );
-      },
-    },
-    {
       id: "ações",
       cell: ({ row }) => {
         const task = row.original;
@@ -140,6 +72,74 @@ export default function ArtTasks({ className }: HTMLAttributes<HTMLElement>) {
               </DialogContent>
             </Dialog>
           </DropdownMenu>
+        );
+      },
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: ({ row }) => {
+        return <div>{row.getValue("id")}</div>;
+      },
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            className="cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Nome <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <div>{row.getValue("name")}</div>;
+      },
+    },
+    {
+      accessorKey: "descrição",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            className="cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Descrição <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <div className="max-w-sm truncate">{row.getValue("desc")}</div>;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => {
+        return (
+          <Button
+            className="cursor-pointer"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            status <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const status = row.getValue("status") as ReactNode;
+        return (
+          <div className="flex items-center gap-1 ">
+            {status === "pending" ? (
+              <Hourglass size={11.5} />
+            ) : (
+              <Check size={11.5} />
+            )}
+            {status}
+          </div>
         );
       },
     },
