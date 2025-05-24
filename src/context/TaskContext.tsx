@@ -49,32 +49,39 @@ export default function TaskContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  const [isNewUser, setIsNewUser] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // Estado inicial do reducer: lê do localStorage na primeira renderização
+  const [taskState, dispatch] = useReducer(taskReducer, [], (initialArg) => {
+    if (typeof window !== "undefined") {
+      const taskStorage = localStorage.getItem("tasks");
+      if (taskStorage) {
+        return JSON.parse(taskStorage) as ITasks[];
+      }
+    }
+    return initialArg; // Retorna o estado inicial vazio se não houver a chave "tasks"
+  });
 
-  const initialState: ITasks[] = [];
-  const [taskState, dispatch] = useReducer(taskReducer, initialState);
+  // Determina se é um novo usuário com base na existência da chave "tasks" no localStorage
+  const [isNewUser, setIsNewUser] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("tasks") === null;
+    }
+    return true; // Assume que é um novo usuário no lado do servidor (SSR)
+  });
 
+  // Sincroniza o taskState com o localStorage
   useEffect(() => {
-    const taskStorage = localStorage.getItem("tasks");
-    if (taskStorage) {
-      const parsedTasks = JSON.parse(taskStorage);
-      dispatch({ type: "INIT", payload: { tasks: parsedTasks as ITasks[] } });
+    localStorage.setItem("tasks", JSON.stringify(taskState));
+
+    // Se a chave "tasks" existe no localStorage, não é um novo usuário.
+    // Isso é importante caso o usuário tenha sido marcado como "novo" (ex: SSR)
+    // e depois o localStorage foi lido e a chave existe.
+    if (localStorage.getItem("tasks") !== null && isNewUser) {
       setIsNewUser(false);
     }
-    setIsInitialized(true);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (!isInitialized) return;
-    setIsNewUser(false);
-    localStorage.setItem("tasks", JSON.stringify(taskState));
-  }, [taskState, isInitialized]);
+  }, [taskState, isNewUser]);
 
   return (
-    <TaskContext.Provider value={{ taskState, dispatch, isNewUser, isLoading }}>
+    <TaskContext.Provider value={{ taskState, dispatch, isNewUser }}>
       {children}
     </TaskContext.Provider>
   );

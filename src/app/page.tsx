@@ -14,8 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home() {
   const { theme } = useTheme();
-  const { isNewUser, isLoading } = useContext(TaskContext)!;
-  if (isLoading) return null;
+  const { isNewUser } = useContext(TaskContext)!;
 
   return (
     <>

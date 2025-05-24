@@ -6,5 +6,4 @@ export default interface ITaskContext {
   taskState: ITasks[];
   dispatch: Dispatch<Actions>;
   isNewUser: boolean;
-  isLoading: boolean;
 }
